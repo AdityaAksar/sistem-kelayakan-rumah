@@ -110,7 +110,7 @@
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
             <h2 class="font-bold text-gray-900 mb-5">Update Foto Rumah (opsional)</h2>
             @if($dataRtlh->nama_file_foto)
-            <img src="{{ Storage::url($dataRtlh->nama_file_foto) }}" alt="Foto" class="w-40 h-32 object-cover rounded-xl mb-4">
+            <img src="{{ Storage::disk('public')->url($dataRtlh->nama_file_foto) }}" alt="Foto" class="w-40 h-32 object-cover rounded-xl mb-4">
             @endif
             <input type="file" name="foto" accept="image/*" class="text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-amalfi/10 file:text-amalfi hover:file:bg-amalfi/20">
             <p class="text-xs text-gray-400 mt-2">Kosongkan jika tidak ingin mengganti foto.</p>

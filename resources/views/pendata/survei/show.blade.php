@@ -43,7 +43,7 @@
             </span>
         </div>
         @if($dataRtlh->nama_file_foto)
-        <a href="{{ Storage::url($dataRtlh->nama_file_foto) }}" target="_blank" class="text-sm text-amalfi hover:underline flex items-center gap-1">
+        <a href="{{ Storage::disk('public')->url($dataRtlh->nama_file_foto) }}" target="_blank" class="text-sm text-amalfi hover:underline flex items-center gap-1">
             📸 Lihat Foto Rumah
         </a>
         @endif

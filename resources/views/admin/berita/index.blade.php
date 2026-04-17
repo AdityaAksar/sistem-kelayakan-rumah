@@ -39,8 +39,11 @@
                 @if($berita->status === 'published')
                 <a href="{{ route('berita.show', $berita->slug) }}" target="_blank" class="flex-1 text-center text-xs px-3 py-1.5 bg-amalfi/10 text-amalfi rounded-lg hover:bg-amalfi/20 transition font-medium">Lihat</a>
                 @endif
-                {{-- Delete button triggers modal --}}
-                <button onclick="openDeleteModal('{{ $berita->id }}', '{{ addslashes($berita->judul) }}')"
+                {{-- Delete button triggers modal — URL dibuat oleh Blade bukan JS --}}
+                <button
+                    onclick="openDeleteModal(this)"
+                    data-url="{{ route('admin.berita.destroy', $berita) }}"
+                    data-title="{{ addslashes(Str::limit($berita->judul, 60)) }}"
                     class="flex-1 text-center text-xs px-3 py-1.5 bg-red-50 text-red-500 rounded-lg hover:bg-red-100 transition font-medium">Hapus</button>
             </div>
         </div>
@@ -72,10 +75,11 @@
         <form id="deleteForm" method="POST">
             @csrf
             @method('DELETE')
+            <input type="hidden" name="konfirmasi" id="deleteKonfirmasiHidden" value="">
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">Ketik <strong>HAPUS</strong> untuk konfirmasi:</label>
                 <input type="text" id="deleteConfirmInput" placeholder='Ketik "HAPUS" di sini'
-                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-200" required>
+                    class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-200" autocomplete="off">
             </div>
             <div class="flex gap-3">
                 <button type="button" onclick="closeDeleteModal()" class="flex-1 py-2.5 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition text-sm">Batal</button>
@@ -88,10 +92,14 @@
 
 @push('scripts')
 <script>
-function openDeleteModal(id, title) {
-    document.getElementById('modalDesc').textContent = 'Hapus berita "' + title.substring(0, 50) + '..."';
-    document.getElementById('deleteForm').action = '/admin/berita/' + id;
+function openDeleteModal(btn) {
+    const url   = btn.getAttribute('data-url');
+    const title = btn.getAttribute('data-title');
+    document.getElementById('modalDesc').textContent = 'Hapus berita "' + title + '"?';
+    document.getElementById('deleteForm').action = url;
     document.getElementById('deleteConfirmInput').value = '';
+    document.getElementById('deleteConfirmInput').classList.remove('border-red-400', 'ring-2', 'ring-red-200');
+    document.getElementById('deleteConfirmInput').placeholder = 'Ketik "HAPUS" di sini';
     document.getElementById('deleteModal').classList.remove('hidden');
     document.getElementById('deleteModal').classList.add('flex');
 }
@@ -101,15 +109,21 @@ function closeDeleteModal() {
     document.getElementById('deleteModal').classList.remove('flex');
 }
 
-// Validasi ketik "HAPUS"
+// Validasi ketik "HAPUS" — sinkronkan ke hidden input
 document.getElementById('deleteForm')?.addEventListener('submit', function(e) {
-    const val = document.getElementById('deleteConfirmInput').value;
+    const inputEl = document.getElementById('deleteConfirmInput');
+    const val = inputEl.value.trim();
     if (val !== 'HAPUS') {
         e.preventDefault();
-        document.getElementById('deleteConfirmInput').classList.add('border-red-400', 'ring-2', 'ring-red-200');
-        document.getElementById('deleteConfirmInput').placeholder = 'Ketik tepat: HAPUS';
+        inputEl.classList.add('border-red-400', 'ring-2', 'ring-red-200');
+        inputEl.placeholder = 'Ketik tepat: HAPUS';
+        inputEl.focus();
+        return;
     }
+    // Salin nilai ke hidden field agar dikirim ke controller
+    document.getElementById('deleteKonfirmasiHidden').value = val;
 });
+
 
 document.getElementById('deleteModal')?.addEventListener('click', function(e) {
     if (e.target === this) closeDeleteModal();

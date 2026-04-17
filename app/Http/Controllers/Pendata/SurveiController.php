@@ -133,7 +133,8 @@ class SurveiController extends Controller
 
     public function show(DataRtlh $dataRtlh)
     {
-        $this->authorize('view', $dataRtlh);
+        // Manual ownership check — pendata hanya bisa lihat data miliknya sendiri
+        abort_if($dataRtlh->user_id !== Auth::id(), 403, 'Anda tidak memiliki akses ke data ini.');
         $dataRtlh->load(['kelurahan.kecamatan','hasilPrediksi.modelVersion','user']);
         return view('pendata.survei.show', compact('dataRtlh'));
     }

@@ -21,8 +21,8 @@
         <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
             <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Foto Bukti Lapangan</p>
             @if($dataRtlh->nama_file_foto)
-                <a href="{{ Storage::url($dataRtlh->nama_file_foto) }}" target="_blank">
-                    <img src="{{ Storage::url($dataRtlh->nama_file_foto) }}" alt="Foto Rumah" class="w-full h-40 object-cover rounded-xl hover:opacity-90 transition">
+                <a href="{{ Storage::disk('public')->url($dataRtlh->nama_file_foto) }}" target="_blank">
+                    <img src="{{ Storage::disk('public')->url($dataRtlh->nama_file_foto) }}" alt="Foto Rumah" class="w-full h-40 object-cover rounded-xl hover:opacity-90 transition">
                 </a>
             @else
                 <div class="w-full h-40 bg-gray-100 rounded-xl flex items-center justify-center text-gray-400 text-sm">Tidak ada foto</div>
