@@ -10,12 +10,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password'])]
+use App\Traits\LogsActivity;
+
+#[Fillable(['name', 'email', 'password', 'role', 'is_active'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, LogsActivity;
 
     /**
      * Get the attributes that should be cast.
@@ -29,4 +31,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function dataRtlhs() { return $this->hasMany(DataRtlh::class); }
+    public function modelVersions() { return $this->hasMany(ModelVersion::class); }
+    public function activityLogs() { return $this->hasMany(ActivityLog::class); }
+    public function beritas() { return $this->hasMany(Berita::class); }
 }
