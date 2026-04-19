@@ -48,7 +48,7 @@
     <div class="p-5 border-b border-white/20 flex items-center justify-between">
         <a href="{{ route('home') }}" class="flex items-center gap-3">
             <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
-                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h3a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h3a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
+                <img src="{{ asset('images/dinas_pu.png') }}" alt="Logo" class="w-5 h-5 text-white">
             </div>
             <div>
                 <span class="font-bold leading-tight block text-sm">Perkimtan</span>

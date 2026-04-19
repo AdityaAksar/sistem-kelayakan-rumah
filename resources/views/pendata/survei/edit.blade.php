@@ -63,14 +63,14 @@
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
             <h2 class="font-bold text-gray-900 mb-5">Kondisi Fisik</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                @php $konOptions=['Baik','Rusak Ringan','Rusak Sedang','Rusak Berat']; @endphp
+                @php $konOptions = ['Layak', 'Menuju Layak', 'Agak Layak', 'Kurang Layak', 'Tidak Layak']; @endphp
                 @foreach([
                     ['Kondisi Atap','kondisi_atap',$konOptions],
                     ['Kondisi Dinding','kondisi_dinding',$konOptions],
                     ['Kondisi Lantai','kondisi_lantai',$konOptions],
-                    ['Material Atap','material_atap_terluas',['Seng','Asbes','Genteng Tanah','Genteng Beton','Sirap','Lainnya']],
-                    ['Material Dinding','material_dinding_terluas',['Bata Merah Plester','Bata Merah Tanpa Plester','Papan','Bambu/Anyaman','Lainnya']],
-                    ['Material Lantai','material_lantai_terluas',['Ubin/Keramik','Semen/Plester','Kayu/Papan','Tanah','Lainnya']],
+                    ['Material Atap','material_atap_terluas',['Asbes', 'Bambu', 'Daun-daunan', 'Genteng', 'Ijuk', 'Jerami', 'Kayu/ Sirap', 'Rumbia', 'Seng']],
+                    ['Material Dinding','material_dinding_terluas',['Anyaman Bambu', 'Bambu', 'GRC (Asbes)', 'Kayu', 'Lainnya', 'Plesteran Anyaman Bambu', 'Rumbia', 'Tembok']],
+                    ['Material Lantai','material_lantai_terluas',['Bambu', 'Kayu', 'Keramik', 'Marmer/ Granit', 'Plesteran', 'Tanah', 'Ubin/ Tegel']],
                 ] as [$label,$name,$opts])
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ $label }}</label>
@@ -91,10 +91,10 @@
             <h2 class="font-bold text-gray-900 mb-5">Sanitasi & Fasilitas</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 @foreach([
-                    ['Sumber Air Minum','sumber_air_minum',['PDAM','Sumur Bor/Pompa','Sumur Gali','Mata Air','Air Hujan','Sungai','Lainnya']],
-                    ['Jenis Jamban','jenis_jamban',['Kloset Leher Angsa','Kloset Cemplung','Jamban Helikopter','Tidak ada Jamban']],
-                    ['Sumber Penerangan','sumber_penerangan',['PLN','Genset','Lentera/Lampu Minyak','Lainnya']],
-                    ['Jenis TPA Tinja','jenis_tpa_tinja',['Tangki Septik','Cubluk','Sungai/Laut/Danau','Lubang Tanah','Tidak Ada']],
+                    ['Sumber Air Minum','sumber_air_minum',['Air Hujan', 'Air Kemasan/ Isi Ulang', 'Lainnya', 'Mata Air', 'PDAM', 'Sumur']],
+                    ['Jenis Jamban','jenis_jamban',['Cemplung/ Cubluk', 'Leher Angsa', 'Plengsengan']],
+                    ['Sumber Penerangan','sumber_penerangan',['Bukan Listrik', 'Listrik Non PLN', 'Listrik PLN Dengan Meteran', 'Listrik PLN Tanpa Meteran']],
+                    ['Jenis TPA Tinja','jenis_tpa_tinja',['IPAL', 'Kolam/ Sawah/ Sungai/ Danau/ Laut', 'Lubang Tanah', 'Pantai/ Tanah Lapang/ Kebun', 'Tangki Septik']],
                 ] as [$label,$name,$opts])
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ $label }}</label>

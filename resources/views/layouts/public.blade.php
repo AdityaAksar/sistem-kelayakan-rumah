@@ -52,7 +52,7 @@
             {{-- LOGO --}}
             <a href="{{ route('home') }}" class="flex items-center gap-3 group">
                 <div class="w-9 h-9 rounded-xl bg-amalfi flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
-                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h3a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h3a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
+                    <img src="{{ asset('images/dinas_pu.png') }}" alt="Logo" class="w-5 h-5 text-white">
                 </div>
                 <div>
                     <span class="font-bold text-amalfi text-base leading-tight block">Perkimtan</span>
@@ -133,7 +133,7 @@
             <div>
                 <div class="flex items-center gap-3 mb-4">
                     <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
-                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h3a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h3a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
+                        <img src="{{ asset('images/dinas_pu.png') }}" alt="Logo" class="w-5 h-5 text-white">
                     </div>
                     <span class="font-bold text-lg">Perkimtan Kota Palu</span>
                 </div>
@@ -161,7 +161,7 @@
         </div>
         <div class="border-t border-white/20 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-sm text-white/60">
             <span>© {{ date('Y') }} Dinas Perumahan dan Kawasan Permukiman Kota Palu.</span>
-            <span>Sistem RTLH v1.0 — Powered by AI</span>
+            <span>Sistem RTLH</span>
         </div>
     </div>
 </footer>

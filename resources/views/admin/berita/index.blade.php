@@ -56,7 +56,7 @@
 
 @else
 <div class="text-center py-20 text-gray-400">
-    <svg class="w-14 h-14 mx-auto mb-4 text-gray-200" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4z" clip-rule="evenodd"/></svg>
+    <img src="{{ asset('images/dinas_pu.png') }}" class="w-14 h-14 mx-auto mb-4">
     <p class="text-lg font-medium">Belum ada berita.</p>
     <a href="{{ route('admin.berita.create') }}" class="text-amalfi text-sm hover:underline mt-2 inline-block">Tulis berita pertama →</a>
 </div>

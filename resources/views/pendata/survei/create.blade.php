@@ -116,10 +116,10 @@
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             @foreach([
-                ['Kepemilikan Rumah','kepemilikan_rumah',['Milik Sendiri','Kontrak/Sewa','Numpang/Bebas Sewa','Milik Orang Tua','Lainnya']],
-                ['Kepemilikan Tanah','kepemilikan_tanah',['Milik Sendiri','Milik Negara','Milik Orang Lain','Sertifikat','Lainnya']],
-                ['Jenis Kawasan','jenis_kawasan',['Perumahan Formal','Permukiman Informal','Pinggiran Kota','Pedesaan','Kawasan Rawan Bencana']],
-                ['Fungsi Ruang','fungsi_ruang',['Hunian','Campuran (Hunian + Usaha)','Lainnya']],
+                ['Kepemilikan Rumah','kepemilikan_rumah',['Milik Sendiri', 'Bukan Milik Sendiri', 'Kontrak/ Sewa']],
+                ['Kepemilikan Tanah','kepemilikan_tanah',['Milik Sendiri', 'Bukan Milik Sendiri', 'Tanah Negara']],
+                ['Jenis Kawasan','jenis_kawasan',['Daerah Tertinggal Terpencil', 'KEK', 'KSPN', 'Kawasan Kumuh', 'Kawasan Perbatasan', 'Kawasan Pesisir Nelayan', 'Kawasan Rawan Air', 'Kawasan Transmigrasi', 'Pulau-Pulau Kecil/ Terluar']],
+                ['Fungsi Ruang','fungsi_ruang',['Non Perumahan', 'Perumahan']],
             ] as [$label, $name, $options])
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ $label }} <span class="text-red-500">*</span></label>
@@ -178,11 +178,11 @@
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             @php
-            $kondisiOptions = ['Baik','Rusak Ringan','Rusak Sedang','Rusak Berat'];
-            $materialAtap   = ['Seng','Asbes','Genteng Tanah','Genteng Beton','Sirap','Lainnya'];
-            $materialDinding= ['Bata Merah Plester','Bata Merah Tanpa Plester','Papan','Bambu/Anyaman','Lainnya'];
-            $materialLantai = ['Ubin/Keramik','Semen/Plester','Kayu/Papan','Tanah','Lainnya'];
-            $pondasiOptions = ['Batu Kali','Batu Bata','Beton Bertulang','Tanpa Pondasi','Lainnya'];
+            $kondisiOptions = ['Layak', 'Menuju Layak', 'Agak Layak', 'Kurang Layak', 'Tidak Layak'];
+            $materialAtap   = ['Asbes', 'Bambu', 'Daun-daunan', 'Genteng', 'Ijuk', 'Jerami', 'Kayu/ Sirap', 'Rumbia', 'Seng'];
+            $materialDinding= ['Anyaman Bambu', 'Bambu', 'GRC (Asbes)', 'Kayu', 'Lainnya', 'Plesteran Anyaman Bambu', 'Rumbia', 'Tembok'];
+            $materialLantai = ['Bambu', 'Kayu', 'Keramik', 'Marmer/ Granit', 'Plesteran', 'Tanah', 'Ubin/ Tegel'];
+            $pondasiOptions = ['Layak', 'Menuju Layak', 'Agak Layak', 'Kurang Layak', 'Tidak Layak'];
             @endphp
 
             <div>
@@ -270,13 +270,13 @@
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             @foreach([
-                ['Sumber Penerangan','sumber_penerangan',['PLN','Genset','Lentera/Lampu Minyak','Lainnya']],
-                ['Bantuan Pemerintah Sebelumnya','bantuan_pemerintah',['Belum Pernah','RTLH (BSPS)','Bedah Rumah','DAK Perumahan','Lainnya']],
-                ['Sumber Air Minum','sumber_air_minum',['PDAM','Sumur Bor/Pompa','Sumur Gali','Mata Air','Air Hujan','Sungai','Lainnya']],
-                ['Jarak Sumber Air ke Tinja','jarak_sumber_air_tinja',['< 10 meter','10 – 50 meter','> 50 meter']],
-                ['Kamar Mandi / Jamban','kamar_mandi_jamban',['Ada di dalam rumah','Ada di luar rumah','Tidak ada']],
-                ['Jenis Jamban','jenis_jamban',['Kloset Leher Angsa','Kloset Cemplung','Jamban Helikopter','Tidak ada Jamban']],
-                ['Jenis Tempat Pembuang Tinja','jenis_tpa_tinja',['Tangki Septik','Cubluk','Sungai/Laut/Danau','Lubang Tanah','Tidak Ada']],
+                ['Sumber Penerangan','sumber_penerangan',['Bukan Listrik', 'Listrik Non PLN', 'Listrik PLN Dengan Meteran', 'Listrik PLN Tanpa Meteran']],
+                ['Bantuan Pemerintah Sebelumnya','bantuan_pemerintah',['Belum Pernah', 'Ya, < 5 Tahun Yang Lalu', 'Ya, > 5 Tahun Yang Lalu']],
+                ['Sumber Air Minum','sumber_air_minum',['Air Hujan', 'Air Kemasan/ Isi Ulang', 'Lainnya', 'Mata Air', 'PDAM', 'Sumur']],
+                ['Jarak Sumber Air ke Tinja','jarak_sumber_air_tinja',['< 10 M', '> 10 M']],
+                ['Kamar Mandi / Jamban','kamar_mandi_jamban',['Bersama/ MCK Komunal', 'Sendiri', 'Tidak Ada']],
+                ['Jenis Jamban','jenis_jamban',['Cemplung/ Cubluk', 'Leher Angsa', 'Plengsengan']],
+                ['Jenis Tempat Pembuang Tinja','jenis_tpa_tinja',['IPAL', 'Kolam/ Sawah/ Sungai/ Danau/ Laut', 'Lubang Tanah', 'Pantai/ Tanah Lapang/ Kebun', 'Tangki Septik']],
             ] as [$label,$name,$options])
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ $label }} <span class="text-red-500">*</span></label>
@@ -312,7 +312,7 @@
     </div>
     <div class="flex justify-between mt-5">
         <button type="button" onclick="prevStep(5)" class="px-6 py-2.5 bg-white border border-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition">← Kembali</button>
-        <button type="submit" class="px-8 py-2.5 bg-green-600 text-white font-bold rounded-xl hover:bg-green-700 transition shadow-lg">✓ Simpan & Kirim ke ML</button>
+        <button type="submit" class="px-8 py-2.5 bg-green-600 text-white font-bold rounded-xl hover:bg-green-700 transition shadow-lg">Simpan & Kirim ke ML</button>
     </div>
 </div>
 
