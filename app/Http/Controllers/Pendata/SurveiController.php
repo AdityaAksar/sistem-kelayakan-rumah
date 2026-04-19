@@ -13,15 +13,69 @@ use Illuminate\Support\Facades\DB;
 
 class SurveiController extends Controller
 {
-    public function dashboard()
+    public function dashboard(\Illuminate\Http\Request $request)
     {
         $user = Auth::user();
-        $totalInput       = DataRtlh::where('user_id', $user->id)->count();
-        $totalPending     = DataRtlh::where('user_id', $user->id)->where('status_validasi', 'pending')->count();
-        $totalDisetujui   = DataRtlh::where('user_id', $user->id)->where('status_validasi', 'disetujui')->count();
-        $totalDitolak     = DataRtlh::where('user_id', $user->id)->where('status_validasi', 'ditolak')->count();
-        $recentData       = DataRtlh::where('user_id', $user->id)->with('hasilPrediksi')->latest()->take(5)->get();
-        return view('pendata.dashboard', compact('totalInput','totalPending','totalDisetujui','totalDitolak','recentData'));
+        $query = DataRtlh::where('user_id', $user->id)->with('hasilPrediksi', 'kelurahan.kecamatan');
+
+        // Filter Rentang Waktu
+        if ($request->filled('waktu')) {
+            if ($request->waktu == 'hari_ini') $query->whereDate('tanggal_pendataan', now()->format('Y-m-d'));
+            if ($request->waktu == 'kemarin') $query->whereDate('tanggal_pendataan', now()->subDay()->format('Y-m-d'));
+            if ($request->waktu == 'minggu_ini') $query->whereBetween('tanggal_pendataan', [now()->startOfWeek(), now()->endOfWeek()]);
+            if ($request->waktu == 'bulan_ini') $query->whereMonth('tanggal_pendataan', now()->month);
+        }
+
+        // Filter Area
+        if ($request->filled('kelurahan_id')) {
+            $query->where('kelurahan_id', $request->kelurahan_id);
+        }
+
+        // Output Filtered
+        $allData = $query->get();
+        $totalInput = $allData->count();
+        $totalPending = $allData->where('status_validasi', 'pending')->count();
+        $totalDisetujui = $allData->where('status_validasi', 'disetujui')->count();
+        $totalDitolak = $allData->where('status_validasi', 'ditolak')->count();
+
+        // 1. Kinerja Harian
+        $dataHariIni = DataRtlh::where('user_id', $user->id)->whereDate('tanggal_pendataan', now()->format('Y-m-d'))->count();
+        $targetHarian = 10;
+        
+        // 2. Kalender Intensitas
+        $kalenderHeatmap = DataRtlh::where('user_id', $user->id)
+            ->whereDate('tanggal_pendataan', '>=', now()->subDays(60))
+            ->select(DB::raw('DATE(tanggal_pendataan) as date'), DB::raw('count(*) as count'))
+            ->groupBy('date')
+            ->pluck('count', 'date');
+
+        // 3. Progress Cakupan Area (Top 5 Kelurahan/Desa yg dipegang pendata)
+        $progressArea = $allData->groupBy(fn($d) => optional($d->kelurahan)->nama_kelurahan ?? 'Lainnya')->map->count();
+
+        // 4. Quality Assurance (Tabel Cacat Data)
+        $dataCacat = $allData->filter(function($d) {
+            return empty($d->latitude) || empty($d->longitude) || empty($d->nama_file_foto) || strlen($d->nik) != 16;
+        })->values();
+
+        // 5. Radar Anomali Data
+        $dataAnomali = $allData->filter(function($d) {
+            $isRtlh = optional($d->hasilPrediksi)->label_prediksi === 'rtlh';
+            $gajiTinggi = $d->penghasilan_per_bulan > 5000000;
+            $luasNol = $d->luas_rumah == 0;
+            $penghuniBanyakSempit = ($d->luas_rumah > 0) && ($d->luas_rumah / $d->jumlah_penghuni < 2);
+
+            return ($isRtlh && $gajiTinggi) || $luasNol || $penghuniBanyakSempit;
+        })->values();
+
+        // 6. Log Aktivitas Terbaru
+        $recentData = DataRtlh::where('user_id', $user->id)->with('hasilPrediksi', 'kelurahan')->latest()->take(10)->get();
+        $kelurahansTugas = Kelurahan::whereIn('id', DataRtlh::where('user_id', $user->id)->pluck('kelurahan_id')->unique())->get();
+
+        return view('pendata.dashboard', compact(
+            'totalInput','totalPending','totalDisetujui','totalDitolak',
+            'dataHariIni','targetHarian','kalenderHeatmap','progressArea',
+            'dataCacat','dataAnomali','recentData', 'user', 'kelurahansTugas'
+        ));
     }
 
     public function index(Request $request)

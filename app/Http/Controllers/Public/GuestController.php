@@ -22,38 +22,60 @@ class GuestController extends Controller
     public function prosedur(){ return view('guest.prosedur'); }
     public function faq()     { return view('guest.faq'); }
 
-    public function statistik()
+    public function statistik(\Illuminate\Http\Request $request)
     {
         $kecamatans = Kecamatan::with('kelurahans')->get();
+        // Base Query
+        $base = DataRtlh::with(['kelurahan.kecamatan', 'hasilPrediksi']);
 
-        // Chart: RLH vs RTLH per kecamatan
-        $perKecamatan = DataRtlh::with('kelurahan.kecamatan')
-            ->get()
-            ->groupBy(fn($d) => optional($d->kelurahan->kecamatan)->nama_kecamatan ?? 'Lainnya')
+        if ($request->filled('kecamatan')) {
+            $base->whereHas('kelurahan', fn($q) => $q->where('kecamatan_id', $request->kecamatan));
+        }
+        if ($request->filled('status')) {
+            $base->whereHas('hasilPrediksi', fn($q) => $q->where('label_prediksi', $request->status));
+        }
+        if ($request->filled('kawasan')) {
+            $base->where('jenis_kawasan', $request->kawasan);
+        }
+
+        $allData = $base->get();
+
+        $totalSurvei = $allData->count();
+        $totalRtlh = $allData->filter(fn($d) => optional($d->hasilPrediksi)->label_prediksi === 'rtlh')->count();
+        $totalRlh = $allData->filter(fn($d) => optional($d->hasilPrediksi)->label_prediksi === 'rlh')->count();
+
+        // Top 5 Wilayah Perhatian (Kecamatan)
+        $perKecamatan = $allData->groupBy(fn($d) => optional($d->kelurahan->kecamatan)->nama_kecamatan ?? 'Lainnya')
             ->map(function($items) {
                 return [
                     'total' => $items->count(),
-                    'rlh'   => $items->filter(fn($d) => optional($d->hasilPrediksi)->label_prediksi === 'rlh')->count(),
                     'rtlh'  => $items->filter(fn($d) => optional($d->hasilPrediksi)->label_prediksi === 'rtlh')->count(),
+                    'rlh'   => $items->filter(fn($d) => optional($d->hasilPrediksi)->label_prediksi === 'rlh')->count(),
                 ];
             });
+        
+        $top5KecamatanRtlh = collect($perKecamatan)
+            ->map(fn($item, $key) => ['kecamatan' => $key, 'rtlh' => $item['rtlh'], 'persentase' => $item['total'] > 0 ? round(($item['rtlh'] / $item['total']) * 100, 1) : 0])
+            ->sortByDesc('persentase')
+            ->take(5)->values();
 
-        // Sumber air dominan
-        $sumberAir = DataRtlh::selectRaw('sumber_air_minum, count(*) as total')
-            ->groupBy('sumber_air_minum')->orderByDesc('total')->take(6)->pluck('total','sumber_air_minum');
+        // Distribusi Tipologi Kawasan
+        $tipologiKawasan = $allData->groupBy('jenis_kawasan')
+            ->map(fn($items) => $items->count())
+            ->sortDesc()->take(6);
 
-        // Kondisi atap
-        $kondisiAtap = DataRtlh::selectRaw('kondisi_atap, count(*) as total')
-            ->groupBy('kondisi_atap')->orderByDesc('total')->take(5)->pluck('total','kondisi_atap');
+        // Kondisi Utama
+        $sumberAir = $allData->groupBy('sumber_air_minum')->map(fn($items) => $items->count())->sortDesc()->take(5);
+        $materialAtap = $allData->groupBy('material_atap_terluas')->map(fn($items) => $items->count())->sortDesc()->take(5);
 
-        // Material lantai
-        $materialLantai = DataRtlh::selectRaw('material_lantai_terluas, count(*) as total')
-            ->groupBy('material_lantai_terluas')->orderByDesc('total')->take(5)->pluck('total','material_lantai_terluas');
+        // Kepadatan Rata-rata
+        $avgPenghuni = $allData->avg('jumlah_penghuni') ?? 0;
+        $avgLuas = $allData->avg('luas_rumah') ?? 0;
 
-        // Kepemilikan rumah
-        $kepemilikanRumah = DataRtlh::selectRaw('kepemilikan_rumah, count(*) as total')
-            ->groupBy('kepemilikan_rumah')->orderByDesc('total')->take(5)->pluck('total','kepemilikan_rumah');
-
-        return view('guest.statistik', compact('perKecamatan','sumberAir','kondisiAtap','materialLantai','kepemilikanRumah','kecamatans'));
+        return view('guest.statistik', compact(
+            'totalSurvei', 'totalRtlh', 'totalRlh', 
+            'top5KecamatanRtlh', 'tipologiKawasan', 'sumberAir', 'materialAtap',
+            'avgPenghuni', 'avgLuas', 'perKecamatan', 'kecamatans', 'allData'
+        ));
     }
 }

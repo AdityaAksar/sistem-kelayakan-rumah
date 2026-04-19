@@ -1,68 +1,193 @@
 @extends('layouts.public')
-@section('title', 'Statistik RTLH')
+@section('title', 'Statistik Terbuka RTLH')
 
 @section('content')
 <div class="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-10 sm:mb-12 reveal">
-        <span class="text-xs font-bold uppercase tracking-widest text-amalfi">Data Terbuka</span>
-        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mt-2">Dashboard Statistik RTLH</h1>
-        <p class="text-gray-500 mt-3 max-w-2xl mx-auto text-sm sm:text-base">Data agregat kondisi perumahan Kota Palu. Tidak menampilkan data personal (NIK/Nama).</p>
+        <span class="inline-block px-3 py-1 bg-amalfi/10 text-amalfi text-xs font-bold uppercase tracking-widest rounded-full mb-3">Portal Masyarakat</span>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mt-2">Cetak Biru Statistik RTLH</h1>
+        <p class="text-gray-500 mt-3 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">Transparansi data kondisi perumahan warga. Data disajikan secara agregat (ringkasan) tanpa menampilkan informasi personal (No. KK, NIK).</p>
     </div>
 
-    {{-- Filter --}}
-    <div class="bg-amalfi/5 border border-amalfi/20 rounded-2xl p-5 sm:p-6 mb-8 sm:mb-10 reveal">
-        <h2 class="text-sm font-bold text-amalfi uppercase tracking-widest mb-3">Filter Wilayah</h2>
-        <form method="GET" action="{{ route('statistik') }}" class="flex flex-col sm:flex-row gap-3">
-            <select name="kecamatan" class="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amalfi/50">
-                <option value="">Semua Kecamatan</option>
-                @foreach($kecamatans as $kec)
-                <option value="{{ $kec->id }}" {{ request('kecamatan') == $kec->id ? 'selected' : '' }}>{{ $kec->nama_kecamatan }}</option>
-                @endforeach
-            </select>
-            <button type="submit" class="px-5 py-2.5 bg-amalfi text-white text-sm font-semibold rounded-xl hover:bg-blue-700 transition w-full sm:w-auto">Tampilkan</button>
+    {{-- Filter Slicer --}}
+    <div class="bg-white border border-gray-200 rounded-2xl p-5 mb-8 shadow-sm reveal">
+        <form method="GET" action="{{ route('statistik') }}" class="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end">
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Wilayah</label>
+                <select name="kecamatan" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-amalfi/50">
+                    <option value="">Semua Kecamatan</option>
+                    @foreach($kecamatans as $kec)
+                    <option value="{{ $kec->id }}" {{ request('kecamatan') == $kec->id ? 'selected' : '' }}>{{ $kec->nama_kecamatan }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Status Kelayakan</label>
+                <select name="status" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-amalfi/50">
+                    <option value="">Semua Status</option>
+                    <option value="rtlh" {{ request('status') == 'rtlh' ? 'selected' : '' }}>Tidak Layak Huni</option>
+                    <option value="rlh" {{ request('status') == 'rlh' ? 'selected' : '' }}>Layak Huni</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Jenis Kawasan</label>
+                <select name="kawasan" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-amalfi/50">
+                    <option value="">Semua Kawasan</option>
+                    @foreach(['Kawasan Kumuh','Daerah Tertinggal Terpencil','Kawasan Pesisir Nelayan','Kawasan Transmigrasi'] as $kw)
+                    <option value="{{ $kw }}" {{ request('kawasan') == $kw ? 'selected' : '' }}>{{ $kw }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <button type="submit" class="w-full px-5 py-2.5 bg-amalfi text-white text-sm font-semibold rounded-xl hover:bg-blue-700 transition shadow-md">Terapkan Filter</button>
+            </div>
         </form>
     </div>
 
-    {{-- Charts Grid --}}
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-8">
-        @foreach([
-            ['chartKecamatan','Distribusi RLH vs RTLH Per Kecamatan','Perbandingan kelayakan di tiap kecamatan'],
-            ['chartAir','Sumber Air Minum Warga','Distribusi akses air bersih warga survei'],
-            ['chartAtap','Kondisi Fisik Atap Bangunan','Mayoritas kondisi fisik atap rumah'],
-            ['chartLantai','Material Lantai Terluas','Jenis material lantai yang digunakan'],
-        ] as $i => [$id, $title, $sub])
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-6 hover:shadow-md transition reveal" style="transition-delay:{{ $i * 60 }}ms">
-            <h3 class="text-base font-bold text-gray-800 mb-1">{{ $title }}</h3>
-            <p class="text-xs text-gray-400 mb-4">{{ $sub }}</p>
-            <canvas id="{{ $id }}" class="max-h-72"></canvas>
+    {{-- Highlight / Big Numbers (Scorecard) --}}
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8 reveal">
+        <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 border border-blue-200 shadow-sm relative overflow-hidden">
+            <div class="absolute -right-4 -bottom-4 text-7xl opacity-10">📊</div>
+            <h3 class="text-sm font-bold text-blue-800 tracking-wider uppercase mb-1">Total Rumah Terdata</h3>
+            <p class="text-4xl font-extrabold text-blue-900">{{ number_format($totalSurvei) }}</p>
         </div>
-        @endforeach
+        <div class="bg-gradient-to-br from-red-50 to-orange-50 rounded-2xl p-6 border border-red-200 shadow-sm relative overflow-hidden">
+            <div class="absolute -right-4 -bottom-4 text-7xl opacity-10">⚠️</div>
+            <h3 class="text-sm font-bold text-red-800 tracking-wider uppercase mb-1">Rasio Tidak Layak Huni</h3>
+            <p class="text-4xl font-extrabold text-red-700">{{ $totalSurvei > 0 ? round(($totalRtlh / $totalSurvei) * 100, 1) : 0 }}%</p>
+            <p class="text-xs text-red-600 mt-1 font-medium">{{ number_format($totalRtlh) }} rumah RTLH dari total data</p>
+        </div>
+    </div>
 
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-6 hover:shadow-md transition lg:col-span-2 reveal">
-            <h3 class="text-base font-bold text-gray-800 mb-1">Status Kepemilikan Rumah</h3>
-            <p class="text-xs text-gray-400 mb-4">Distribusi jenis kepemilikan rumah warga survei</p>
-            <canvas id="chartKepemilikan" class="max-h-56"></canvas>
+    {{-- Indikator Kepadatan & Empati --}}
+    <div class="bg-amber-50 border border-amber-200 rounded-2xl p-6 mb-8 flex items-center gap-4 shadow-sm reveal">
+        <div class="w-12 h-12 bg-amber-200 rounded-full flex items-center justify-center text-2xl flex-shrink-0">👨‍👩‍👧‍👦</div>
+        <div>
+            <h3 class="text-amber-900 font-bold text-lg leading-tight">Indikator Empati Publik</h3>
+            <p class="text-amber-800 text-sm mt-1">Rata-rata 1 rumah diisi oleh <strong>{{ round($avgPenghuni, 1) }} jiwa</strong> dengan rata-rata luas bangunan hanya <strong>{{ round($avgLuas, 1) }} meter persegi</strong>.</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        {{-- Peta Agregat Wilayah & Top 5 --}}
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 reveal relative overflow-hidden">
+            <h3 class="text-lg font-bold text-gray-800 mb-1">Top 5 Wilayah Perhatian Tinggi</h3>
+            <p class="text-xs text-gray-400 mb-6 border-b pb-4">Kecamatan dengan rasio persentase "Tidak Layak Huni" tertinggi</p>
+            <div class="space-y-5">
+                @forelse($top5KecamatanRtlh as $item)
+                <div>
+                    <div class="flex justify-between items-end mb-1">
+                        <span class="text-sm font-semibold text-gray-700">{{ $item['kecamatan'] }}</span>
+                        <span class="text-xs font-bold {{ $item['persentase'] > 50 ? 'text-red-500' : 'text-orange-500' }}">{{ $item['persentase'] }}% RTLH</span>
+                    </div>
+                    <div class="w-full bg-gray-100 rounded-full h-2">
+                        <div class="bg-gradient-to-r {{ $item['persentase'] > 50 ? 'from-red-400 to-red-600' : 'from-orange-400 to-orange-500' }} h-2 rounded-full" style="width: {{ $item['persentase'] }}%"></div>
+                    </div>
+                </div>
+                @empty
+                <p class="text-sm text-gray-500 text-center py-4">Data tidak tersedia</p>
+                @endforelse
+            </div>
+            <!-- PETA PERSEBARAN AGREGAT (LEAFLET) -->
+            <div id="mapPalu" class="mt-8 rounded-xl border border-gray-200 shadow-inner z-10" style="height: 300px;"></div>
+        </div>
+
+        {{-- Kondisi Utama --}}
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 reveal">
+            <h3 class="text-lg font-bold text-gray-800 mb-1">Pemetaan Kondisi Utama</h3>
+            <p class="text-xs text-gray-400 mb-6 border-b pb-4">Visualisasi rasio material bangunan dan akses</p>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <h4 class="text-xs font-bold text-center text-gray-600 mb-3 uppercase">Sumber Air Minum</h4>
+                    <canvas id="chartAir" class="max-h-48"></canvas>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold text-center text-gray-600 mb-3 uppercase">Material Atap Terluas</h4>
+                    <canvas id="chartAtap" class="max-h-48"></canvas>
+                </div>
+            </div>
+        </div>
+
+        {{-- Distribusi Tipologi Kawasan --}}
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:col-span-2 reveal">
+            <h3 class="text-lg font-bold text-gray-800 mb-1">Distribusi Tipologi Kawasan</h3>
+            <p class="text-xs text-gray-400 mb-6 border-b pb-4">Jumlah rumah berdasarkan lokasi kawasan khusus</p>
+            <canvas id="chartKawasan" class="max-h-64"></canvas>
         </div>
     </div>
 </div>
 @endsection
 
 @push('scripts')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
 const palette = ['#2E5AA7','#FFA62B','#86C5FF','#22C55E','#EF4444','#8B5CF6','#06B6D4','#F59E0B'];
 
-const kecData = @json($perKecamatan);
-new Chart(document.getElementById('chartKecamatan'), { type:'bar', data:{ labels:Object.keys(kecData), datasets:[
-    { label:'RLH', data:Object.values(kecData).map(d=>d.rlh??0), backgroundColor:'#86C5FF', borderRadius:4 },
-    { label:'RTLH', data:Object.values(kecData).map(d=>d.rtlh??0), backgroundColor:'#FFA62B', borderRadius:4 },
-]}, options:{ plugins:{ legend:{ position:'bottom' } }, scales:{ x:{ stacked:true, ticks:{ font:{ size:10 }, maxRotation:45 } }, y:{ stacked:true } }, responsive:true } });
+// Kumpulan Data Titik Koordinat dari Server
+const mapData = @json($allData->filter(fn($d) => !empty($d->latitude) && !empty($d->longitude))->map(fn($d) => [
+    'lat' => $d->latitude, 
+    'lng' => $d->longitude, 
+    'status' => optional($d->hasilPrediksi)->label_prediksi === 'rtlh' ? 'rtlh' : 'rlh'
+])->values());
 
-new Chart(document.getElementById('chartAir'), { type:'doughnut', data:{ labels:{!! json_encode($sumberAir->keys()) !!}, datasets:[{ data:{!! json_encode($sumberAir->values()) !!}, backgroundColor:palette, hoverOffset:6 }]}, options:{ plugins:{ legend:{ position:'bottom', labels:{ font:{ size:11 } } } }, cutout:'55%' } });
+// Inisialisasi Peta (Koordinat titik tengah Kota Palu/Donggala)
+const map = L.map('mapPalu').setView([-0.9000, 119.8700], 11);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18,
+    attribution: '© OpenStreetMap contributors'
+}).addTo(map);
 
-new Chart(document.getElementById('chartAtap'), { type:'bar', data:{ labels:{!! json_encode($kondisiAtap->keys()) !!}, datasets:[{ label:'Kondisi Atap', data:{!! json_encode($kondisiAtap->values()) !!}, backgroundColor:['#86C5FF','#FFA62B','#EF4444','#8B5CF6'], borderRadius:6 }]}, options:{ indexAxis:'y', plugins:{ legend:{ display:false } }, responsive:true } });
+// Tambahkan Circle Markers (Agregat Tanpa Data Sensitif)
+mapData.forEach(point => {
+    L.circleMarker([point.lat, point.lng], {
+        radius: 4,
+        fillColor: point.status === 'rtlh' ? '#ef4444' : '#22c55e',
+        color: point.status === 'rtlh' ? '#b91c1c' : '#166534',
+        weight: 1,
+        opacity: 0.8,
+        fillOpacity: 0.6
+    }).addTo(map);
+});
+</script>
+<script>
+// Chart Air
+const airObj = {!! json_encode($sumberAir) !!};
+new Chart(document.getElementById('chartAir'), {
+    type: 'doughnut',
+    data: {
+        labels: Object.keys(airObj),
+        datasets: [{ data: Object.values(airObj), backgroundColor: palette, hoverOffset: 4 }]
+    },
+    options: { plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } }, cutout: '65%' }
+});
 
-new Chart(document.getElementById('chartLantai'), { type:'pie', data:{ labels:{!! json_encode($materialLantai->keys()) !!}, datasets:[{ data:{!! json_encode($materialLantai->values()) !!}, backgroundColor:palette, hoverOffset:6 }]}, options:{ plugins:{ legend:{ position:'bottom', labels:{ font:{ size:11 } } } } } });
+// Chart Atap
+const atapObj = {!! json_encode($materialAtap) !!};
+new Chart(document.getElementById('chartAtap'), {
+    type: 'pie',
+    data: {
+        labels: Object.keys(atapObj),
+        datasets: [{ data: Object.values(atapObj), backgroundColor: palette, hoverOffset: 4 }]
+    },
+    options: { plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } }
+});
 
-new Chart(document.getElementById('chartKepemilikan'), { type:'bar', data:{ labels:{!! json_encode($kepemilikanRumah->keys()) !!}, datasets:[{ label:'Jumlah', data:{!! json_encode($kepemilikanRumah->values()) !!}, backgroundColor:'#2E5AA7', borderRadius:6 }]}, options:{ plugins:{ legend:{ display:false } }, scales:{ x:{ ticks:{ font:{ size:11 } } } } } });
+// Chart Kawasan
+const kawasanObj = {!! json_encode($tipologiKawasan) !!};
+new Chart(document.getElementById('chartKawasan'), {
+    type: 'bar',
+    data: {
+        labels: Object.keys(kawasanObj),
+        datasets: [{ label: 'Jumlah Rumah', data: Object.values(kawasanObj), backgroundColor: '#06B6D4', borderRadius: 4 }]
+    },
+    options: {
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } },
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
 </script>
 @endpush
