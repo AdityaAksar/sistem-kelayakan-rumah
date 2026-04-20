@@ -81,17 +81,27 @@ class MachineLearningService
     /**
      * MLOps: Mengirim file model .pkl terbaru ke API ML.
      *
-     * @param UploadedFile $file
      * @param string $versionName
+     * @param UploadedFile $modelFile
+     * @param UploadedFile|null $imputerFile
+     * @param UploadedFile|null $featureColsFile
      * @return array|null Null jika koneksi gagal/timeout
      */
-    public function updateModel(UploadedFile $file, string $versionName): ?array
+    public function updateModel(string $versionName, UploadedFile $modelFile, ?UploadedFile $imputerFile = null, ?UploadedFile $featureColsFile = null): ?array
     {
         try {
-            $response = Http::withToken($this->apiKey)
-                ->timeout(10) // Timeout lebih lama untuk upload file
-                ->attach('model', file_get_contents($file->getRealPath()), $file->getClientOriginalName())
-                ->post("{$this->baseUrl}/update_model");
+            $req = Http::withToken($this->apiKey)->timeout(30); // Timeout diperpanjang hingga 30s krn bisa 3 file
+            
+            $req->attach('model', file_get_contents($modelFile->getRealPath()), $modelFile->getClientOriginalName());
+            
+            if ($imputerFile) {
+                $req->attach('imputer', file_get_contents($imputerFile->getRealPath()), $imputerFile->getClientOriginalName());
+            }
+            if ($featureColsFile) {
+                $req->attach('feature_columns', file_get_contents($featureColsFile->getRealPath()), $featureColsFile->getClientOriginalName());
+            }
+
+            $response = $req->post("{$this->baseUrl}/update_model");
 
             if ($response->successful() && $response->json('status') === 'success') {
                 return [

@@ -19,8 +19,16 @@
                 <input type="text" name="version_name" placeholder="contoh: XGBoost v2.1" required class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amalfi/50">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">File Model (.pkl)</label>
-                <input type="file" name="model_file" required class="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-amalfi/10 file:text-amalfi hover:file:bg-amalfi/20">
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">File Model Utama (.pkl) <span class="text-red-500">*</span></label>
+                <input type="file" name="model_file" accept=".pkl" required class="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-amalfi/10 file:text-amalfi hover:file:bg-amalfi/20">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">File Imputer (.pkl) <span class="text-gray-400 font-normal">(Opsional)</span></label>
+                <input type="file" name="imputer_file" accept=".pkl" class="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-600 hover:file:bg-gray-200">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">File Feature Columns (.pkl) <span class="text-gray-400 font-normal">(Opsional)</span></label>
+                <input type="file" name="feature_columns_file" accept=".pkl" class="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-600 hover:file:bg-gray-200">
             </div>
             <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-3 text-xs text-yellow-700">
                 ⚠️ Mengunggah model baru akan menonaktifkan model yang sedang berjalan. Pastikan file .pkl sudah diuji.

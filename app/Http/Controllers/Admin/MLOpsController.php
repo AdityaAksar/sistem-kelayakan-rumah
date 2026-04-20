@@ -20,11 +20,18 @@ class MLOpsController extends Controller
     public function upload(Request $request, MachineLearningService $mlService)
     {
         $request->validate([
-            'model_file'   => 'required|file|max:51200',
-            'version_name' => 'required|string|max:50'
+            'model_file'           => 'required|file|max:51200',
+            'imputer_file'         => 'nullable|file|max:51200',
+            'feature_columns_file' => 'nullable|file|max:51200',
+            'version_name'         => 'required|string|max:50'
         ]);
 
-        $response = $mlService->updateModel($request->file('model_file'), $request->version_name);
+        $response = $mlService->updateModel(
+            $request->version_name,
+            $request->file('model_file'),
+            $request->file('imputer_file'),
+            $request->file('feature_columns_file')
+        );
 
         if (!$response) {
             return back()->with('error', 'Gagal terhubung ke API Machine Learning (Offline/Timeout).');
