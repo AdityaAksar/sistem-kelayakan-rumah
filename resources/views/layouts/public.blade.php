@@ -51,8 +51,8 @@
         <div class="flex justify-between h-16 items-center">
             {{-- LOGO --}}
             <a href="{{ route('home') }}" class="flex items-center gap-3 group">
-                <div class="w-9 h-9 rounded-xl bg-amalfi flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
-                    <img src="{{ asset('images/dinas_pu.png') }}" alt="Logo" class="w-5 h-5 text-white">
+                <div class="w-9 h-9 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+                    <img src="{{ asset('images/dinas_pu.png') }}" alt="Logo">
                 </div>
                 <div>
                     <span class="font-bold text-amalfi text-base leading-tight block">Perkimtan</span>
@@ -132,8 +132,8 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             <div>
                 <div class="flex items-center gap-3 mb-4">
-                    <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
-                        <img src="{{ asset('images/dinas_pu.png') }}" alt="Logo" class="w-5 h-5 text-white">
+                    <div class="w-9 h-9 flex items-center justify-center">
+                        <img src="{{ asset('images/dinas_pu.png') }}" alt="Logo">
                     </div>
                     <span class="font-bold text-lg">Perkimtan Kota Palu</span>
                 </div>
@@ -153,7 +153,7 @@
                 <h4 class="font-semibold mb-4">Kontak</h4>
                 <ul class="space-y-3 text-sm text-white/75">
                     <li class="flex gap-2"><span class="shrink-0">📍</span><span>Jl. Balai Kota, Kota Palu, Sulawesi Tengah</span></li>
-                    <li class="flex gap-2"><span class="shrink-0">📞</span><span>(0451) 000-0000</span></li>
+                    <li class="flex gap-2"><span class="shrink-0">📞</span><span>(0451) 401-9143</span></li>
                     <li class="flex gap-2"><span class="shrink-0">✉️</span><span>perkimtan@palukota.go.id</span></li>
                     <li class="flex gap-2"><span class="shrink-0">🕐</span><span>Senin–Jumat, 08.00–16.00 WITA</span></li>
                 </ul>

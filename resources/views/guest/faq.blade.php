@@ -32,7 +32,7 @@
         <h3 class="font-bold text-gray-800 mb-2">Tidak menemukan jawaban Anda?</h3>
         <p class="text-gray-500 text-sm mb-4">Hubungi kami melalui:</p>
         <div class="flex justify-center gap-6 text-sm text-gray-600">
-            <span>📞 (0451) 000-0000</span>
+            <span>📞 (0451) 401-9143</span>
             <span>✉️ perkimtan@palukota.go.id</span>
         </div>
     </div>

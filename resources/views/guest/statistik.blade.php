@@ -4,9 +4,9 @@
 @section('content')
 <div class="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-10 sm:mb-12 reveal">
-        <span class="inline-block px-3 py-1 bg-amalfi/10 text-amalfi text-xs font-bold uppercase tracking-widest rounded-full mb-3">Portal Masyarakat</span>
-        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mt-2">Cetak Biru Statistik RTLH</h1>
-        <p class="text-gray-500 mt-3 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">Transparansi data kondisi perumahan warga. Data disajikan secara agregat (ringkasan) tanpa menampilkan informasi personal (No. KK, NIK).</p>
+        <span class="inline-block px-3 py-1 bg-amalfi/10 text-amalfi text-xs font-bold uppercase tracking-widest rounded-full mb-3">INFORMASI</span>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mt-2">Statistik RTLH</h1>
+        <p class="text-gray-500 mt-3 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">Informasi singkat tentang kondisi rumah warga</p>
     </div>
 
     {{-- Filter Slicer --}}
@@ -63,7 +63,7 @@
     <div class="bg-amber-50 border border-amber-200 rounded-2xl p-6 mb-8 flex items-center gap-4 shadow-sm reveal">
         <div class="w-12 h-12 bg-amber-200 rounded-full flex items-center justify-center text-2xl flex-shrink-0">👨‍👩‍👧‍👦</div>
         <div>
-            <h3 class="text-amber-900 font-bold text-lg leading-tight">Indikator Empati Publik</h3>
+            <h3 class="text-amber-900 font-bold text-lg leading-tight"> Gambaran Kondisi Hunian</h3>
             <p class="text-amber-800 text-sm mt-1">Rata-rata 1 rumah diisi oleh <strong>{{ round($avgPenghuni, 1) }} jiwa</strong> dengan rata-rata luas bangunan hanya <strong>{{ round($avgLuas, 1) }} meter persegi</strong>.</p>
         </div>
     </div>

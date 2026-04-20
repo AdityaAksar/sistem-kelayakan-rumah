@@ -4,7 +4,7 @@
 @section('content')
 <div class="py-12 sm:py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-10 reveal">
-        <span class="inline-block px-3 py-1 bg-amalfi/10 text-amalfi text-xs font-bold uppercase tracking-widest rounded-full mb-3">Gratis & Instan</span>
+        <span class="inline-block px-3 py-1 bg-amalfi/10 text-amalfi text-xs font-bold uppercase tracking-widest rounded-full mb-3">SIMULASI CEPAT</span>
         <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mt-2">Simulasi Kelayakan Rumah</h1>
         <p class="text-gray-500 mt-3 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">Isi form lengkap berikut untuk mengecek secara mandiri apakah kondisi rumah Anda masuk kriteria RTLH. <strong>Data tidak tersimpan</strong> ke dalam sistem.</p>
     </div>

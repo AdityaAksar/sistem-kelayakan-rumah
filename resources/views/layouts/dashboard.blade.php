@@ -47,8 +47,8 @@
     {{-- Logo --}}
     <div class="p-5 border-b border-white/20 flex items-center justify-between">
         <a href="{{ route('home') }}" class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
-                <img src="{{ asset('images/dinas_pu.png') }}" alt="Logo" class="w-5 h-5 text-white">
+            <div class="w-9 h-9 flex items-center justify-center">
+                <img src="{{ asset('images/dinas_pu.png') }}" alt="Logo">
             </div>
             <div>
                 <span class="font-bold leading-tight block text-sm">Perkimtan</span>

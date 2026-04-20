@@ -48,8 +48,8 @@
 
         <div class="space-y-6">
             <div class="bg-amalfi rounded-2xl p-6 text-white text-center">
-                <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <img src="{{ asset('images/dinas_pu.png') }}" alt="Logo" class="w-5 h-5 text-white">
+                <div class="w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <img src="{{ asset('images/dinas_pu.png') }}" alt="Logo">
                 </div>
                 <h3 class="font-bold text-lg">Dinas Perkimtan</h3>
                 <p class="text-white/70 text-sm mt-1">Kota Palu, Sulawesi Tengah</p>
@@ -57,7 +57,7 @@
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 text-sm space-y-4 text-gray-600">
                 <h3 class="font-bold text-gray-800">Informasi Kontak</h3>
                 <div class="flex gap-3"><span>📍</span><span>Jl. Balai Kota No. 1, Kota Palu</span></div>
-                <div class="flex gap-3"><span>📞</span><span>(0451) 000-0000</span></div>
+                <div class="flex gap-3"><span>📞</span><span>(0451) 401-9143</span></div>
                 <div class="flex gap-3"><span>✉️</span><span>perkimtan@palukota.go.id</span></div>
                 <div class="flex gap-3"><span>🕐</span><span>Senin – Jumat: 08.00 – 16.00 WITA</span></div>
             </div>
