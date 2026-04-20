@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Admin Command Center')
-@section('page-title', 'Command Center Eksekutif')
+@section('page-title', 'Dashboard Admin')
 
 @section('content')
 

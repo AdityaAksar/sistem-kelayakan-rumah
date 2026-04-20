@@ -15,7 +15,7 @@
         <button type="submit" class="px-4 py-2.5 bg-amalfi text-white text-sm font-semibold rounded-xl hover:bg-blue-700 transition">Filter</button>
     </form>
     <div class="flex gap-2">
-        <a href="{{ route('admin.data.export') }}" class="px-4 py-2.5 bg-green-600 text-white text-sm font-semibold rounded-xl hover:bg-green-700 transition">⬇ Export Excel</a>
+        <a href="{{ route('admin.data.export') }}" class="px-4 py-2.5 bg-green-600 text-white text-sm font-semibold rounded-xl hover:bg-green-700 transition">Export Excel</a>
     </div>
 </div>
 

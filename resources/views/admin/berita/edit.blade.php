@@ -56,10 +56,10 @@
             </div>
 
             <div class="bg-gray-50 rounded-xl p-4 border border-gray-100 text-xs text-gray-400 flex flex-wrap gap-x-6 gap-y-1.5">
-                <span>📝 Slug: <code class="bg-gray-100 px-1 rounded">{{ $berita->slug }}</code></span>
-                <span>👤 Penulis: {{ $berita->user?->name }}</span>
-                <span>📅 Dibuat: {{ $berita->created_at->isoFormat('D MMM Y, HH:mm') }}</span>
-                <span>🔄 Diperbarui: {{ $berita->updated_at->isoFormat('D MMM Y, HH:mm') }}</span>
+                <span>Slug: <code class="bg-gray-100 px-1 rounded">{{ $berita->slug }}</code></span>
+                <span>Penulis: {{ $berita->user?->name }}</span>
+                <span>Dibuat: {{ $berita->created_at->isoFormat('D MMM Y, HH:mm') }}</span>
+                <span>Diperbarui: {{ $berita->updated_at->isoFormat('D MMM Y, HH:mm') }}</span>
             </div>
 
             <div class="flex gap-3 pt-2">
